@@ -1,0 +1,89 @@
+apply plugin: rootProject.ext.plugins.library
+apply plugin: 'com.novoda.bintray-release'//添加
+
+android {
+    compileSdkVersion  rootProject.ext.android.compileSdkVersion
+    buildToolsVersion  rootProject.ext.android.buildToolsVersion
+
+    defaultConfig {
+        minSdkVersion rootProject.ext.android.minSdkVersion
+        targetSdkVersion rootProject.ext.android.targetSdkVersion
+        versionCode rootProject.ext.android.versionCode
+        versionName rootProject.ext.android.versionName
+
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    tasks.whenTaskAdded { task ->
+        if (task.name.contains("lint")//如果instant run不生效，把clean这行干掉
+                ||task.name.equals("clean")//项目中有用到aidl则不可以舍弃这个任务
+                ||task.name.contains("Aidl")//用不到测试的时候就可以先关闭
+                ||task.name.contains("mockableAndroidJar")
+                ||task.name.contains("UnitTest")
+                ||task.name.contains("AndroidTest")//用不到NDK和JNI的也关闭掉
+                || task.name.contains("Ndk")
+                || task.name.contains("Jni")
+        ) {
+            task.enabled = false
+        }
+    }
+}
+
+dependencies {
+    compile fileTree(include: ['*.jar'], dir: 'libs')
+    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    })
+    testCompile 'junit:junit:4.12'
+    compile 'com.android.support:appcompat-v7:'+rootProject.ext.dependencies.dependenciesVersion
+    compile 'com.android.support:design:'+rootProject.ext.dependencies.dependenciesVersion
+    compile 'com.android.support:recyclerview-v7:'+rootProject.ext.dependencies.dependenciesVersion
+    compile 'org.sogrey:Utils:0.0.1'
+    compile 'org.sogrey:TSD:0.0.6'
+    compile files('libs/glide-3.7.0.jar')
+    compile files('libs/lite-orm-1.9.2.jar')
+    compile 'com.android.support:support-annotations:'+rootProject.ext.dependencies.dependenciesVersion
+    compile 'com.zhy:percent-support-extends:1.1.1'
+}
+
+//添加
+publish {
+    userOrg = 'sogrey'//bintray.com用户名
+    groupId = 'org.sogrey'//jcenter上的路径
+    artifactId = 'BaseUI'//项目名称
+    publishVersion = '0.0.1'//版本号
+    desc = 'Android framework'//描述，不重要
+    website = 'https://github.com/Sogrey/BaseUI'//网站，不重要；尽量模拟github上的地址，例如我这样的；当然你有地址最好了
+}
+
+tasks.withType(JavaCompile) {
+    options.encoding = "utf-8"
+}
+
+task sourcesJar(type: Jar) {
+    from android.sourceSets.main.java.srcDirs
+    classifier = 'sources'
+}
+
+task javadoc(type: Javadoc) {
+    source = android.sourceSets.main.java.srcDirs
+    classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
+    options.encoding = "UTF-8"
+}
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    classifier = 'javadoc'
+    from javadoc.destinationDir
+}
+
+artifacts {
+    archives javadocJar
+    archives sourcesJar
+}

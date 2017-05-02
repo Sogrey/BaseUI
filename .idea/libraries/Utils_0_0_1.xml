@@ -1,0 +1,12 @@
+<component name="libraryTable">
+  <library name="Utils-0.0.1">
+    <CLASSES>
+      <root url="file://$USER_HOME$/.android/build-cache/e09fd0efc72ba34f08547b5ad962bf167b57eca4/output/res" />
+      <root url="jar://$USER_HOME$/.android/build-cache/e09fd0efc72ba34f08547b5ad962bf167b57eca4/output/jars/classes.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.sogrey/Utils/0.0.1/f5ac066ef7c0ce91c11a44d3fc8a6839bb23b22a/Utils-0.0.1-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

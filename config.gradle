@@ -1,0 +1,23 @@
+ext {
+    plugins = [
+            application: 'com.android.application',
+            library    : 'com.android.library',
+            maven      : 'com.github.dcendents.android-maven',
+            bintray    : 'com.jfrog.bintray'
+    ]
+
+    android = [
+            applicationId    : "org.sogrey.baseui.demo",
+            compileSdkVersion: 25,
+            buildToolsVersion: "25.0.2",
+            minSdkVersion    : 11,
+            targetSdkVersion : 25,
+            versionCode      : 1,
+            versionName      : "1.0"
+    ]
+
+
+    dependencies = [
+            dependenciesVersion : "25.2.0"
+    ]
+}
